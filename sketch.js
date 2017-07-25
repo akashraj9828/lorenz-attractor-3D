@@ -1,14 +1,14 @@
 var ang=0.1
-var x=1
-var y=1
-var z=1
+var x=-4
+var y=-8
+var z=-1
 var a=10
 var b=28
 var c=8/3
 var dx=1
 var dy=1
 var dz=1
-var dt=0.01
+var dt=0.008
 var xp=[]
 var yp=[]
 var zp=[]
@@ -18,12 +18,17 @@ var img
 var getX
 var getY
 var getZ
-
+var rad=2
+var sclsl
+var canvas
 
 
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
+  canvas=createCanvas(windowWidth, windowHeight, WEBGL);
   clr=random(0,255)
+  btn=createButton("save image")
+  btn.position(100,20)
+  btn.mousePressed(function(){save(canvas,"image.jpg")})
   console.log("color:::"+clr);
 var getX = prompt("Enter value for sigma:range(0,30)", 10);
 var getY = prompt("Enter value for rho:range(0,99)", 28);
@@ -34,6 +39,13 @@ c= parseFloat(getZ);
 console.log("a:::"+a)
 console.log("b:::"+b)
 console.log("c:::"+c)
+sclsl=createSlider(0.0001,9,5,0.0001)
+sclsl.position(width/2,30)
+
+var fov = PI/3.0;
+  var cameraZ = (height/2.0) / tan(fov/2.0);
+  perspective(fov, width/height, cameraZ * 0.1, cameraZ * 10);
+
 }
 
 
@@ -46,8 +58,9 @@ function drawLine(){
   beginShape();
   for(j=0;j<i;j++){
 
-  vertex(xp[j],yp[j],zp[j])
-}
+    vertex(xp[j],yp[j],zp[j])
+
+  }
   endShape();
   clr+=0.1
 }
@@ -56,12 +69,14 @@ function drawLine(){
 function draw() {
 
   background(10);
-  scale(5)
-  angx=map(mouseX,0,width,0,TWO_PI)
-  angy=map(mouseY,0,width,0,TWO_PI)
-  rotateX(angx+ang*0.1)
-  rotateZ(angy+ang*0.1)
-  rotateY(ang)
+  
+  scl=sclsl.value()
+  scale(scl)
+  
+  rotateX(map(mouseY, 0, height, 0, TWO_PI));
+  rotateY(map(mouseX, 0, width, 0, TWO_PI));
+  rotateZ(ang*0.5)
+
   dx=(a*(y-x))*dt
   dy=(x*(b-z)-y)*dt
   dz=((x*y)-(c*z))*dt
@@ -71,14 +86,44 @@ function draw() {
   xp[i]=x
   yp[i]=y
   zp[i]=z
+
+
+
   push()
   translate(x,y,z)
-  fill(255,255,255,255);
-  sphere(1)
+  colorMode(RGB)
+  fill(255);
+  sphere(rad)
   pop()
-  drawLine()
+
+
+  push()
+  translate(xp[i-10],yp[i-10],zp[i-10])
+  colorMode(RGB)
+  fill(240);
+  sphere(rad*0.8)
+  pop()
+
+
+  push()
+  translate(xp[i-20],yp[i-20],zp[i-20])
+ colorMode(RGB)
+  fill(210);
+  sphere(rad*0.6)
+  pop()
+
+   push()
+  translate(xp[i-30],yp[i-30],zp[i-30])
+colorMode(RGB)
+  fill(180);
+  sphere(rad*0.4)
+  pop()
+
+ 
+ drawLine()
   i++
 
   ang+=0.01
 
 }
+
