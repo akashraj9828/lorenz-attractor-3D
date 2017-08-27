@@ -28,26 +28,29 @@ function setup() {
   clr=random(0,255)
   btn=createButton("save image")
   btn.position(100,20)
-  btn.mousePressed(function(){save(canvas,"image.jpg")})
-  console.log("color:::"+clr);
-var getX = prompt("Enter value for sigma:range(0,30)", 10);
-var getY = prompt("Enter value for rho:range(0,99)", 28);
-var getZ = prompt("Enter value for beta:range(0,29)", 2.6666);
-a= parseFloat(getX);
-b= parseFloat(getY);
-c= parseFloat(getZ);
-console.log("a:::"+a)
-console.log("b:::"+b)
-console.log("c:::"+c)
+  btn.mouseClicked(saveimg)
+//   console.log("color:::"+clr);
+// var getX = prompt("Enter value for sigma:range(0,30)", 10);
+// var getY = prompt("Enter value for rho:range(0,99)", 28);
+// var getZ = prompt("Enter value for beta:range(0,29)", 2.6666);
+// a= parseFloat(getX);
+// b= parseFloat(getY);
+// c= parseFloat(getZ);
+// console.log("a:::"+a)
+// console.log("b:::"+b)
+// console.log("c:::"+c)
 sclsl=createSlider(0.0001,9,5,0.0001)
 sclsl.position(width/2,30)
 
-var fov = PI/3.0;
-  var cameraZ = (height/2.0) / tan(fov/2.0);
-  perspective(fov, width/height, cameraZ * 0.1, cameraZ * 10);
+// var fov = PI/3.0;
+//   var cameraZ = (height/2.0) / tan(fov/2.0);
+//   perspective(fov, width/height, cameraZ * 0.1, cameraZ * 10);
 
 }
 
+function saveimg(){
+	save(canvas,"image.jpg")
+}
 
 function drawLine(){
 
@@ -69,13 +72,13 @@ function drawLine(){
 function draw() {
 
   background(10);
-  
+  orbitControl();
   scl=sclsl.value()
   scale(scl)
   
-  rotateX(map(mouseY, 0, height, 0, TWO_PI));
-  rotateY(map(mouseX, 0, width, 0, TWO_PI));
-  rotateZ(ang*0.5)
+  // rotateX(map(mouseY, 0, height, 0, TWO_PI));
+  // rotateY(map(mouseX, 0, width, 0, TWO_PI));
+  // rotateZ(ang*0.5)
 
   dx=(a*(y-x))*dt
   dy=(x*(b-z)-y)*dt
