@@ -13,7 +13,6 @@ var px=[]
 var py=[]
 var pz=[]
 var i=0
-var clr
 var img
 var getX
 var getY
@@ -26,19 +25,32 @@ var canvas
 var debugging=true;		//set true when testing
 var set_x_y_z=false;	//set true if want user input of inital x,y,z
 var shape_closed;	//set false if want to see orignal lorenz attractor
-var makeRandom=true;
+var makeRandomXYZ=true;
+var randomABC=true;
+
+var save;
+
+var initialX;
+var initialY;
+var initialZ;
+
+
 
 
 function setup() {
   canvas=createCanvas(windowWidth, windowHeight, WEBGL);
   clr=random(0,255)
   btn=createButton("save image")
+  save=createButton("save value")
+  save.position(100,50)
   btn.position(100,20)
+  save.mousePressed(save_values)
 
   shape_closed=createCheckbox("close");
 
 
-	if(makeRandom){
+	if(makeRandomXYZ){
+    set_x_y_z=false;
 		x=random(0,50);
 		y=random(0,50);
 		z=random(0,50);
@@ -48,6 +60,13 @@ function setup() {
 		console.log("z::"+z);
 		console.log("dt::"+dt);
 
+	}
+	if(makeRandomXYZ){
+    debugging=true;
+		sigma=random(0,20);
+		rho=random(0,20);
+    beta=random(0,2);
+		
 	}
 
 	if(set_x_y_z){		////takes inital coordinate input(x,y,z) from user
@@ -63,7 +82,7 @@ function setup() {
 	}
 
   btn.mousePressed(function(){save(canvas,"image.jpg")})
-  console.log("color:::"+clr);
+  // console.log("color:::"+clr);
 
 
 if(!debugging){     //when not debugging takes input (sigma,rho,beta) from user
@@ -78,13 +97,24 @@ if(!debugging){     //when not debugging takes input (sigma,rho,beta) from user
 console.log("sigma:::"+sigma)
 console.log("rho:::"+rho)
 console.log("beta:::"+beta)
-sclsl=createSlider(0.0001,9,5,0.0001)
+sclsl=createSlider(0.001,15,5,0.0001)
 sclsl.position(width/2,30)
 
 var fov = PI/3.0;
   var cameraZ = (height/2.0) / tan(fov/2.0);
   perspective(fov, width/height, cameraZ * 0.1, cameraZ * 10);
 
+
+
+  initialX=x;
+  initialY=y;
+  initialZ=z;
+
+}
+
+function save_values(){
+var blob = new Blob(["x:"+initialX+'\n'+"y:"+initialY+'\n'+"z:"+initialZ+'\n'+"dt:"+dt+'\n'+"sigma:"+sigma+'\n'+"rho:"+rho+'\n'+"beta:"+beta+'\n'], {type: "text/plain;charset=utf-8"});
+saveAs(blob, "saved.txt");
 }
 
 
@@ -92,9 +122,6 @@ function drawLine(){
 
 
   colorMode(HSB)
- 
-  // fill(clr%255,255,255,70)
-  // noFill();
   
   beginShape();
   
@@ -116,29 +143,6 @@ function drawLine(){
       
   }
   endShape();
-  
-  
-  // fill((i-j)/8% 255, 255, 100);
-  // fill(255,255,255,70)
-  // beginShape();
-  // for (var j = 0; j < i; j +=10) {
-    
-   
-  
-      
-  //     // strokeWeight(2 / scl);
-  //     // noFill();
-  //     		//begins drawing of shape
-  
-  //    
-  
-  //     // if(shape_closed.checked())
-  //     // endShape(CLOSE);  	// **EXPERIMENTAL joins each 10th point to 1st point
-  //     // else
-      
-  // }
-  // endShape(CLOSE);	
-  clr+=0.5
 }
 
 function setpoints(){
@@ -162,8 +166,8 @@ function draw() {
   scl=sclsl.value()
   scale(scl)
   
-  rotateX(map(mouseY, 0, height, 0, TWO_PI));
-  rotateY(map(mouseX, 0, width, 0, TWO_PI));
+  rotateX(ang*0.1+map(mouseY, 0, height, 0, TWO_PI));
+  rotateY(ang*0.1+map(mouseX, 0, width, 0, TWO_PI));
   rotateZ(ang*0.2)
 
 setpoints()
