@@ -20,13 +20,13 @@ var getZ
 var rad=1.3
 var sclsl
 var canvas
-
+var pause=false;
 
 var debugging=true;		//set true when testing
 var set_x_y_z=false;	//set true if want user input of inital x,y,z
 var shape_closed;	//set false if want to see orignal lorenz attractor
-var makeRandomXYZ=true;
-var randomABC=true;
+var makeRandomXYZ=false;
+var randomABC=false;
 
 var save;
 
@@ -118,6 +118,12 @@ saveAs(blob, "saved.txt");
 }
 
 
+function keyPressed() {
+   if(key=="p" || key=="P"){
+    play_pause()
+  }
+}
+
 function drawLine(){
 
 
@@ -126,20 +132,27 @@ function drawLine(){
   beginShape();
   
   for(j=0;j<i;j+=10){
+    offset=random()
     
     vertex(px[j], py[j],pz[j]);		//set vertices
     
-    vertex(px[j+1], py[j+1],pz[j+1]);
-      vertex(px[j+2], py[j+2],pz[j+2]);
-      vertex(px[j+3], py[j+3],pz[j+3]);
-      vertex(px[j+4], py[j+4],pz[j+4]);
-      vertex(px[j+5], py[j+5],pz[j+5]);
-      vertex(px[j+6], py[j+6],pz[j+6]);
-      vertex(px[j+7], py[j+7],pz[j+7]);
-      vertex(px[j+8], py[j+8],pz[j+8]);
-      vertex(px[j+9], py[j+9],pz[j+9]);
-      vertex(px[j+10], py[j+10],pz[j+10]);
-      vertex(px[j+11], py[j+11],pz[j+11]);
+    vertex(px[j+1]+offset, py[j+1],pz[j+1]);
+      vertex(px[j+2]+offset, py[j+2],pz[j+2]);
+      vertex(px[j+3]+offset, py[j+3],pz[j+3]);
+      vertex(px[j+4]+offset, py[j+4],pz[j+4]);
+
+      vertex(px[j+5]+offset, py[j+5],pz[j+5]);
+      vertex(px[j+5]+offset, py[j+5],pz[j+5]);
+      // vertex(px[j+6], py[j+6],pz[j+6]);
+      
+      
+      vertex(px[j+7]+offset, py[j+7],pz[j+7]);
+      vertex(px[j+8]+offset, py[j+8],pz[j+8]);
+      vertex(px[j+8]+offset, py[j+8],pz[j+8]);
+      // vertex(px[j+9], py[j+9],pz[j+9]);
+      vertex(px[j+10]+offset, py[j+10],pz[j+10]);
+      vertex(px[j+11]+offset, py[j+11],pz[j+11]);
+      
       
   }
   endShape();
@@ -158,6 +171,18 @@ function setpoints(){
   pz[i]=z
 
 }
+
+function play_pause(){
+  if(pause){
+    pause=false;
+    loop()
+  }else if(!pause){
+    pause=true;
+    noLoop();
+  }
+
+}
+
 
 function draw() {
 
