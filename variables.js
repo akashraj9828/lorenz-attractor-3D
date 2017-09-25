@@ -21,6 +21,8 @@ var rad = 2
 var sclsl
 var canvas
 var axis_length = 100
+var plane_length=axis_length
+var plane_muliplier=1
 
 var pause = false;
 var calculate = true;
@@ -32,7 +34,8 @@ var set_x_y_z = false;	//set true if want user input of inital x,y,z
 var shape_closed;	//set false if want to see orignal lorenz attractor
 var makeRandomXYZ = true;
 var randomABC = true;
-var plane=true
+var show_plane=true
+var show_axis=true;
 
 var save;
 

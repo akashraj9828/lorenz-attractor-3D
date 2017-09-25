@@ -111,34 +111,40 @@ function renderAxis() {
 
 }
 
+function renderPlane(plane_l, plane_m) {
+  colorMode(RGB)
+  push()
+  translate(plane_l / 2, plane_l / 2, 0)
+  fill(255, 0, 0, 5)
+  plane(plane_l * plane_m, plane_l * plane_m, 1, 1);
+  pop()
+  push()
+  translate(0, plane_l / 2, plane_l / 2)
+  rotateY(-PI / 2)
+  fill(0, 255, 0, 5)
+  plane(plane_l * plane_m, plane_l * plane_m, 1, 1);
+  pop()
+  push()
+  translate(plane_l / 2, 0, plane_l / 2)
+  rotateX(-PI / 2)
+  fill(0, 0, 255, 5)
+  plane(plane_l * plane_m, plane_l * plane_m, 1, 1);
+  pop()
+}
+
 function draw() {
 
   background(0);
- 
+
 
   scl = sclsl.value()
   scale(scl)
 
   rotation(ang, 0)
- colorMode(RGB)
-  push()
-  translate(axis_length/2,axis_length/2,0)
-  fill(255,0,0,5)
-  plane(axis_length*10, axis_length*10,1,1);
-  pop()
-  push()
-  translate(0,axis_length/2,axis_length/2)
-  rotateY(-PI/2)
-  fill(0,255,0,5)
-  plane(axis_length*10, axis_length*10,1,1);
-  pop()
-  push()
-  translate(axis_length/2,0,axis_length/2)
-  rotateX(-PI/2)
-  fill(0,0,255,5)
-  plane(axis_length*10, axis_length*10,1,1);
-  pop()
-  renderAxis()
+  if (show_axis)
+    renderAxis()
+  if (show_plane)
+    renderPlane(plane_length, plane_muliplier);
 
 
   setpoints()
@@ -148,7 +154,7 @@ function draw() {
 
 
   drawLine()
- i++
+  i++
 
 
 }
@@ -168,8 +174,8 @@ function followers() {
     push()
     translate(px[i - (j * 10)], py[i - (j * 10)], pz[i - (j * 10)])
     colorMode(RGB)
-    cl=255 - (j * 10)
-    fill(cl,100);
+    cl = 255 - (j * 10)
+    fill(cl, 100);
     sphere(rad / (j + 1))
     pop()
   }
@@ -224,7 +230,7 @@ function setpoints() {
     py[i] = y
     pz[i] = z
   }
- 
+
 }
 
 
