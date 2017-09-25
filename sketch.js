@@ -20,6 +20,10 @@ var getZ
 var rad=1.3
 var sclsl
 var canvas
+var axis_length=500
+
+var pause=false;
+var calculate=true;
 
 
 var debugging=true;		//set true when testing
@@ -100,7 +104,7 @@ console.log("beta:::"+beta)
 sclsl=createSlider(0.001,15,5,0.0001)
 sclsl.position(width/2,30)
 
-var fov = PI/3.0;
+var fov = PI/2.0;
   var cameraZ = (height/2.0) / tan(fov/2.0);
   perspective(fov, width/height, cameraZ * 0.1, cameraZ * 10);
 
@@ -111,6 +115,79 @@ var fov = PI/3.0;
   initialZ=z;
 
 }
+
+function draw() {
+  
+    background(0);
+    
+    scl=sclsl.value()
+    scale(scl)
+    
+    rotateX(ang*0.1+map(mouseY, 0, height, 0, TWO_PI));
+    rotateY(ang*0.1+map(mouseX, 0, width, 0, TWO_PI));
+    rotateZ(ang*0.2)
+    beginShape()
+    vertex(axis_length,0,0)
+    vertex(0,0,0)
+    vertex(0,axis_length,0)
+    vertex(0,0,0)
+    vertex(0,0,axis_length)
+    endShape()
+
+    // push()
+    // translate(axis_length/2,5,5)
+    // text("X-axis",0,0)
+    // pop()
+    // push()
+    // translate(5,axis_length/2,5)
+    // text("Y-axis",0,0)
+    // pop()
+    // push()
+    // translate(5,5,axis_length/2)
+    // text("Z-axis",0,0)
+    // pop()
+  
+    text("helllo",110,110)
+  setpoints()
+  
+  
+    push()
+    translate(x,y,z)
+    colorMode(RGB)
+    fill(255);
+    sphere(rad)
+    pop()
+  
+  
+    push()
+    translate(px[i-10],py[i-10],pz[i-10])
+    colorMode(RGB)
+    fill(240);
+    sphere(rad*0.8)
+    pop()
+  
+  
+    push()
+    translate(px[i-20],py[i-20],pz[i-20])
+   colorMode(RGB)
+    fill(210);
+    sphere(rad*0.6)
+    pop()
+  
+     push()
+    translate(px[i-30],py[i-30],pz[i-30])
+  colorMode(RGB)
+    fill(180);
+    sphere(rad*0.4)
+    pop()
+  
+    fill(i/2%255,100,50,100)
+   drawLine()
+    i++
+  
+    ang+=0.01
+  
+  }
 
 function save_values(){
 var blob = new Blob(["x:"+initialX+'\n'+"y:"+initialY+'\n'+"z:"+initialZ+'\n'+"dt:"+dt+'\n'+"sigma:"+sigma+'\n'+"rho:"+rho+'\n'+"beta:"+beta+'\n'], {type: "text/plain;charset=utf-8"});
@@ -147,6 +224,7 @@ function drawLine(){
 
 function setpoints(){
   
+  if(calculate){
   dx=(sigma*(y-x))*dt
   dy=(x*(rho-z)-y)*dt
   dz=((x*y)-(beta*z))*dt
@@ -156,58 +234,35 @@ function setpoints(){
   px[i]=x
   py[i]=y
   pz[i]=z
+  }
 
 }
 
-function draw() {
 
-  background(0);
-  
-  scl=sclsl.value()
-  scale(scl)
-  
-  rotateX(ang*0.1+map(mouseY, 0, height, 0, TWO_PI));
-  rotateY(ang*0.1+map(mouseX, 0, width, 0, TWO_PI));
-  rotateZ(ang*0.2)
-
-setpoints()
-
-
-  push()
-  translate(x,y,z)
-  colorMode(RGB)
-  fill(255);
-  sphere(rad)
-  pop()
-
-
-  push()
-  translate(px[i-10],py[i-10],pz[i-10])
-  colorMode(RGB)
-  fill(240);
-  sphere(rad*0.8)
-  pop()
-
-
-  push()
-  translate(px[i-20],py[i-20],pz[i-20])
- colorMode(RGB)
-  fill(210);
-  sphere(rad*0.6)
-  pop()
-
-   push()
-  translate(px[i-30],py[i-30],pz[i-30])
-colorMode(RGB)
-  fill(180);
-  sphere(rad*0.4)
-  pop()
-
-  fill(i/2%255,100,50,100)
- drawLine()
-  i++
-
-  ang+=0.01
+function play_pause(force_stop){
+  if(pause){
+    pause=false;
+    calculate=true
+    if(force_stop)
+    loop()
+  }else if(!pause){
+    pause=true;
+    calculate=false
+    if(force_stop)
+    noLoop();
+  }
 
 }
+
+function keyPressed() {
+  if(key=="p" || key=="P"){
+   play_pause()
+ }
+ if(key=="f"||key=="F"){
+  play_pause(true);
+ }
+}
+
+
+
 
