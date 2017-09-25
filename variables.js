@@ -42,6 +42,8 @@ var btn;
 var axis_toggle;
 var plane_toggle;
 var reset;
+var stop_calc
+var stop_animation
 
 var initialX;
 var initialY;

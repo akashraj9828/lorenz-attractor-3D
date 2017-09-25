@@ -58,7 +58,7 @@ function log_data() {
 
 // }
 function setup() {
-  canvas = createCanvas(windowWidth, windowHeight, WEBGL);
+  canvas = createCanvas(windowWidth-10, windowHeight-10, WEBGL);
   clr = random(0, 255)
   px.splice(0,px.length)
   py.splice(0,py.length)
@@ -88,6 +88,16 @@ function setup() {
   reset = createButton("reset")
   reset.position(100, 100)
   reset.mousePressed(setup)
+
+
+  stop_calc = createButton("pause calculation")
+  stop_calc.position(100, 120)
+  stop_calc.mousePressed(play_pause)
+
+
+  stop_animation = createButton("force stop")
+  stop_animation.position(100, 140)
+  stop_animation.mousePressed(forceStop)
 
 
 
@@ -260,18 +270,30 @@ function setpoints() {
 
 
 function play_pause(force_stop) {
-  if (pause) {
-    pause = false;
-    calculate = true
-    if (force_stop)
-      loop()
-  } else if (!pause) {
-    pause = true;
+  if (calculate) {
+    
     calculate = false
-    if (force_stop)
-      noLoop();
+   
+  } else{
+    
+    calculate = true
+   
   }
 
+}
+
+function forceStop(){
+if (pause) {
+  pause = false;
+  calculate=true;
+  
+    loop()
+} else{
+  pause = true;
+  calculate=false;
+  
+    noLoop();
+}
 }
 
 function keyPressed() {
@@ -279,7 +301,7 @@ function keyPressed() {
     play_pause()
   }
   if (key == "f" || key == "F") {
-    play_pause(true);
+    forceStop()
   }
   if (key == "r" || key == "R") {
     setup();
