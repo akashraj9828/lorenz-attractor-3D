@@ -41,6 +41,7 @@ var save;
 var btn;
 var axis_toggle;
 var plane_toggle;
+var reset;
 
 var initialX;
 var initialY;

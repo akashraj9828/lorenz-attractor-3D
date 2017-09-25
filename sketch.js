@@ -53,10 +53,19 @@ function log_data() {
 
 
 }
+
+// function reset(){
+
+// }
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight, WEBGL);
   clr = random(0, 255)
+  px.splice(0,px.length)
+  py.splice(0,py.length)
+  pz.splice(0,pz.length)
+  i=0
 
+  // img=loadImage("./img.jpg")
 
   btn = createButton("save image")
   btn.position(100, 20)
@@ -76,7 +85,10 @@ function setup() {
   plane_toggle.position(100, 80)
   plane_toggle.mousePressed(function(){if(show_plane){show_plane=false}else{show_plane=true}})
 
-  shape_closed = createCheckbox("close");
+  reset = createButton("reset")
+  reset.position(100, 100)
+  reset.mousePressed(setup)
+
 
 
   sclsl = createSlider(0.001, 15, 4, 0.0001)
@@ -86,17 +98,19 @@ function setup() {
     log_data()
 
 
-
+    ////////////////PERSPECTIVE CAMERA///////////////////////
   // var fov = PI/1.0;
   // var cameraZ = (height/2.0) / tan(fov/2.0);
   // perspective(fov, width/height, cameraZ * 0.1, cameraZ * 10);
 
+    ///////////////ORTHOGONAL CAMERA////////////////////////
   // ortho(-width, width, height, -height, 10, 0);
 
 
   initialX = x;
   initialY = y;
   initialZ = z;
+  clear()
 
 }
 
@@ -143,7 +157,9 @@ function renderPlane(plane_l, plane_m) {
 
 function draw() {
 
-  background(0);
+  background(3);
+  // background(img);
+  
 
 
   scl = sclsl.value()
@@ -264,6 +280,9 @@ function keyPressed() {
   }
   if (key == "f" || key == "F") {
     play_pause(true);
+  }
+  if (key == "r" || key == "R") {
+    setup();
   }
   if (key == "s" || key == "S") {
     saveCanvas("canvas", "jpg")
