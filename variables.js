@@ -38,6 +38,9 @@ var show_plane=true
 var show_axis=true;
 
 var save;
+var btn;
+var axis_toggle;
+var plane_toggle;
 
 var initialX;
 var initialY;

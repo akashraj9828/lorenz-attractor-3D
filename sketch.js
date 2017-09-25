@@ -64,8 +64,17 @@ function setup() {
 
 
   save = createButton("save value")
-  save.position(100, 50)
+  save.position(100, 40)
   save.mousePressed(save_values)
+
+
+  axis_toggle = createButton("toggle axis")
+  axis_toggle.position(100, 60)
+  axis_toggle.mousePressed(function(){if(show_axis){show_axis=false}else{show_axis=true}})
+
+  plane_toggle = createButton("toggle plane")
+  plane_toggle.position(100, 80)
+  plane_toggle.mousePressed(function(){if(show_plane){show_plane=false}else{show_plane=true}})
 
   shape_closed = createCheckbox("close");
 
