@@ -32,6 +32,7 @@ var set_x_y_z = false;	//set true if want user input of inital x,y,z
 var shape_closed;	//set false if want to see orignal lorenz attractor
 var makeRandomXYZ = true;
 var randomABC = true;
+var plane=true
 
 var save;
 

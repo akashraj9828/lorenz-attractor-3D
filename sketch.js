@@ -7,7 +7,7 @@ function getValues() {
     y = random(0, 50);
     z = random(0, 50);
     dt = random(1) / 100;
-    
+
 
   }
   if (randomABC) {
@@ -40,7 +40,7 @@ function getValues() {
   }
 }
 
-function log_data(){
+function log_data() {
   console.log("x::" + x);
   console.log("y::" + y);
   console.log("z::" + z);
@@ -49,7 +49,7 @@ function log_data(){
   console.log("sigma:::" + sigma)
   console.log("rho:::" + rho)
   console.log("beta:::" + beta)
- 
+
 
 
 }
@@ -60,7 +60,7 @@ function setup() {
 
   btn = createButton("save image")
   btn.position(100, 20)
-  btn.mousePressed(function () { saveCanvas(canvas,"My lorrenz attractor","jpg") })
+  btn.mousePressed(function () { saveCanvas(canvas, "My lorrenz attractor", "jpg") })
 
 
   save = createButton("save value")
@@ -68,20 +68,21 @@ function setup() {
   save.mousePressed(save_values)
 
   shape_closed = createCheckbox("close");
- 
 
-  sclsl = createSlider(0.001, 15, 3, 0.0001)
+
+  sclsl = createSlider(0.001, 15, 4, 0.0001)
   sclsl.position(width / 2, 30)
   getValues();
-  if(logging)
+  if (logging)
     log_data()
 
-  
 
-  // var fov = PI/2.0;
+
+  // var fov = PI/1.0;
   // var cameraZ = (height/2.0) / tan(fov/2.0);
   // perspective(fov, width/height, cameraZ * 0.1, cameraZ * 10);
 
+  // ortho(-width, width, height, -height, 10, 0);
 
 
   initialX = x;
@@ -90,22 +91,22 @@ function setup() {
 
 }
 
-function renderAxis(){
+function renderAxis() {
   colorMode(RGB)
-  fill(255,0,0,100)
+  fill(255, 0, 0, 100)
   beginShape()
   vertex(axis_length, 0, 0)
   vertex(0, 0, 0)
   endShape()
-  fill(0,255,0,100)
+  fill(0, 255, 0, 100)
   beginShape()
   vertex(0, axis_length, 0)
   vertex(0, 0, 0)
   endShape()
-  fill(0,0,255,100)
+  fill(0, 0, 255, 100)
   beginShape()
   vertex(0, 0, axis_length)
-  vertex(0,0,0)
+  vertex(0, 0, 0)
   endShape()
 
 }
@@ -113,12 +114,31 @@ function renderAxis(){
 function draw() {
 
   background(0);
+ 
 
   scl = sclsl.value()
   scale(scl)
 
-  rotation(ang,0)
- renderAxis()
+  rotation(ang, 0)
+ colorMode(RGB)
+  push()
+  translate(axis_length/2,axis_length/2,0)
+  fill(255,0,0,5)
+  plane(axis_length*10, axis_length*10,1,1);
+  pop()
+  push()
+  translate(0,axis_length/2,axis_length/2)
+  rotateY(-PI/2)
+  fill(0,255,0,5)
+  plane(axis_length*10, axis_length*10,1,1);
+  pop()
+  push()
+  translate(axis_length/2,0,axis_length/2)
+  rotateX(-PI/2)
+  fill(0,0,255,5)
+  plane(axis_length*10, axis_length*10,1,1);
+  pop()
+  renderAxis()
 
 
   setpoints()
@@ -126,29 +146,30 @@ function draw() {
 
 
 
-  
-  drawLine()
-  i++
 
- 
+  drawLine()
+ i++
+
+
 }
 
-function rotation(angle,increment){
+function rotation(angle, increment) {
   rotateX(angle * 0.1 + map(mouseY, 0, height, 0, TWO_PI));
   rotateY(angle * 0.1 + map(mouseX, 0, width, 0, TWO_PI));
   rotateZ(angle * 0.2)
-  
+
   ang += increment
 }
 
 function followers() {
 
 
-  for (j = 0; j < 10; j++) {
+  for (j = 0; j < 5; j++) {
     push()
     translate(px[i - (j * 10)], py[i - (j * 10)], pz[i - (j * 10)])
     colorMode(RGB)
-    fill(255 - (j * 20));
+    cl=255 - (j * 10)
+    fill(cl,100);
     sphere(rad / (j + 1))
     pop()
   }
@@ -203,7 +224,7 @@ function setpoints() {
     py[i] = y
     pz[i] = z
   }
-
+ 
 }
 
 
@@ -230,7 +251,7 @@ function keyPressed() {
     play_pause(true);
   }
   if (key == "s" || key == "S") {
-    saveCanvas("canvas","jpg")
+    saveCanvas("canvas", "jpg")
   }
 }
 
