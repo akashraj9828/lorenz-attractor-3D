@@ -10,7 +10,7 @@ function getValues() {
     
 
   }
-  if (makeRandomXYZ) {
+  if (randomABC) {
     debugging = true;
     sigma = random(0, 20);
     rho = random(0, 20);
@@ -40,6 +40,19 @@ function getValues() {
   }
 }
 
+function log_data(){
+  console.log("x::" + x);
+  console.log("y::" + y);
+  console.log("z::" + z);
+  console.log("dt::" + dt);
+
+  console.log("sigma:::" + sigma)
+  console.log("rho:::" + rho)
+  console.log("beta:::" + beta)
+ 
+
+
+}
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight, WEBGL);
   clr = random(0, 255)
@@ -57,20 +70,13 @@ function setup() {
   shape_closed = createCheckbox("close");
  
 
-  sclsl = createSlider(0.001, 15, 5, 0.0001)
+  sclsl = createSlider(0.001, 15, 3, 0.0001)
   sclsl.position(width / 2, 30)
   getValues();
+  if(logging)
+    log_data()
 
-  // console.log("x::" + x);
-  // console.log("y::" + y);
-  // console.log("z::" + z);
-  // console.log("dt::" + dt);
-
-  // console.log("sigma:::" + sigma)
-  // console.log("rho:::" + rho)
-  // console.log("beta:::" + beta)
- 
-
+  
 
   // var fov = PI/2.0;
   // var cameraZ = (height/2.0) / tan(fov/2.0);
@@ -85,13 +91,21 @@ function setup() {
 }
 
 function renderAxis(){
-  fill(255)
+  colorMode(RGB)
+  fill(255,0,0,100)
   beginShape()
   vertex(axis_length, 0, 0)
   vertex(0, 0, 0)
+  endShape()
+  fill(0,255,0,100)
+  beginShape()
   vertex(0, axis_length, 0)
   vertex(0, 0, 0)
+  endShape()
+  fill(0,0,255,100)
+  beginShape()
   vertex(0, 0, axis_length)
+  vertex(0,0,0)
   endShape()
 
 }
@@ -112,7 +126,7 @@ function draw() {
 
 
 
-  fill(i / 2 % 255, 100, 50, 100)
+  
   drawLine()
   i++
 
@@ -152,6 +166,7 @@ function drawLine() {
 
 
   colorMode(HSB)
+  fill(i / 2 % 255, 100, 50, 100)
 
   beginShape();
 
