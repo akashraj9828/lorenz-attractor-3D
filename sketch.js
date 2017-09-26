@@ -1,5 +1,125 @@
 
 
+function setup() {
+  canvas = createCanvas(windowWidth - 10, windowHeight - 10, WEBGL);
+  clr = random(0, 255)
+  px.splice(0, px.length)
+  py.splice(0, py.length)
+  pz.splice(0, pz.length)
+  i = 0
+
+  // img=loadImage("./img.jpg")
+
+  btn = createButton("save image")
+  btn.position(100, 20)
+  btn.mousePressed(function () { saveCanvas(canvas, "My lorrenz attractor", "jpg") })
+
+
+  save = createButton("save value")
+  save.position(100, 40)
+  save.mousePressed(save_values)
+
+
+  axis_toggle = createButton("toggle axis")
+  axis_toggle.position(100, 60)
+  axis_toggle.mousePressed(function () { if (show_axis) { show_axis = false } else { show_axis = true } })
+
+  plane_toggle = createButton("toggle plane")
+  plane_toggle.position(100, 80)
+  plane_toggle.mousePressed(function () { if (show_plane) { show_plane = false } else { show_plane = true } })
+
+  reset = createButton("reset")
+  reset.position(100, 100)
+  reset.mousePressed(setup)
+
+
+  stop_calc = createButton("pause calculation")
+  stop_calc.position(100, 120)
+  stop_calc.mousePressed(play_pause)
+
+
+  stop_animation = createButton("force stop")
+  stop_animation.position(100, 140)
+  stop_animation.mousePressed(forceStop)
+
+
+
+  sclsl = createSlider(0.001, 15, 4, 0.0001)
+  sclsl.position(width / 2, 30)
+  getValues();
+  if (logging)
+    log_data()
+
+
+  ////////////////PERSPECTIVE CAMERA///////////////////////
+  // var fov = PI/1.0;
+  // var cameraZ = (height/2.0) / tan(fov/2.0);
+  // perspective(fov, width/height, cameraZ * 0.1, cameraZ * 10);
+
+  ///////////////ORTHOGONAL CAMERA////////////////////////
+  // ortho(-width, width, height, -height, 10, 0);
+
+
+  initialX = x;
+  initialY = y;
+  initialZ = z;
+  clear()
+
+}
+
+function draw() {
+  
+    background(3);
+    // background(img);
+  
+  
+  
+    scl = sclsl.value()
+    scale(scl)
+  
+    rotation(ang, 0)
+    if (show_axis)
+      renderAxis()
+    if (show_plane)
+      renderPlane(plane_length, plane_muliplier);
+  
+  
+    setpoints()
+    followers()
+  
+  
+  
+  
+    drawLine()
+    i++
+  
+  
+  }
+  
+
+
+  function renderAxis() {
+  colorMode(RGB)
+  fill(255, 0, 0, 100)
+  beginShape()
+  vertex(axis_length, 0, 0)
+  vertex(0, 0, 0)
+  endShape()
+  fill(0, 255, 0, 100)
+  beginShape()
+  vertex(0, axis_length, 0)
+  vertex(0, 0, 0)
+  endShape()
+  fill(0, 0, 255, 100)
+  beginShape()
+  vertex(0, 0, axis_length)
+  vertex(0, 0, 0)
+  endShape()
+
+}
+
+
+
 function getValues() {
   if (makeRandomXYZ) {
     set_x_y_z = false;
@@ -54,95 +174,6 @@ function log_data() {
 
 }
 
-// function reset(){
-
-// }
-function setup() {
-  canvas = createCanvas(windowWidth-10, windowHeight-10, WEBGL);
-  clr = random(0, 255)
-  px.splice(0,px.length)
-  py.splice(0,py.length)
-  pz.splice(0,pz.length)
-  i=0
-
-  // img=loadImage("./img.jpg")
-
-  btn = createButton("save image")
-  btn.position(100, 20)
-  btn.mousePressed(function () { saveCanvas(canvas, "My lorrenz attractor", "jpg") })
-
-
-  save = createButton("save value")
-  save.position(100, 40)
-  save.mousePressed(save_values)
-
-
-  axis_toggle = createButton("toggle axis")
-  axis_toggle.position(100, 60)
-  axis_toggle.mousePressed(function(){if(show_axis){show_axis=false}else{show_axis=true}})
-
-  plane_toggle = createButton("toggle plane")
-  plane_toggle.position(100, 80)
-  plane_toggle.mousePressed(function(){if(show_plane){show_plane=false}else{show_plane=true}})
-
-  reset = createButton("reset")
-  reset.position(100, 100)
-  reset.mousePressed(setup)
-
-
-  stop_calc = createButton("pause calculation")
-  stop_calc.position(100, 120)
-  stop_calc.mousePressed(play_pause)
-
-
-  stop_animation = createButton("force stop")
-  stop_animation.position(100, 140)
-  stop_animation.mousePressed(forceStop)
-
-
-
-  sclsl = createSlider(0.001, 15, 4, 0.0001)
-  sclsl.position(width / 2, 30)
-  getValues();
-  if (logging)
-    log_data()
-
-
-    ////////////////PERSPECTIVE CAMERA///////////////////////
-  // var fov = PI/1.0;
-  // var cameraZ = (height/2.0) / tan(fov/2.0);
-  // perspective(fov, width/height, cameraZ * 0.1, cameraZ * 10);
-
-    ///////////////ORTHOGONAL CAMERA////////////////////////
-  // ortho(-width, width, height, -height, 10, 0);
-
-
-  initialX = x;
-  initialY = y;
-  initialZ = z;
-  clear()
-
-}
-
-function renderAxis() {
-  colorMode(RGB)
-  fill(255, 0, 0, 100)
-  beginShape()
-  vertex(axis_length, 0, 0)
-  vertex(0, 0, 0)
-  endShape()
-  fill(0, 255, 0, 100)
-  beginShape()
-  vertex(0, axis_length, 0)
-  vertex(0, 0, 0)
-  endShape()
-  fill(0, 0, 255, 100)
-  beginShape()
-  vertex(0, 0, axis_length)
-  vertex(0, 0, 0)
-  endShape()
-
-}
 
 function renderPlane(plane_l, plane_m) {
   colorMode(RGB)
@@ -165,34 +196,6 @@ function renderPlane(plane_l, plane_m) {
   pop()
 }
 
-function draw() {
-
-  background(3);
-  // background(img);
-  
-
-
-  scl = sclsl.value()
-  scale(scl)
-
-  rotation(ang, 0)
-  if (show_axis)
-    renderAxis()
-  if (show_plane)
-    renderPlane(plane_length, plane_muliplier);
-
-
-  setpoints()
-  followers()
-
-
-
-
-  drawLine()
-  i++
-
-
-}
 
 function rotation(angle, increment) {
   rotateX(angle * 0.1 + map(mouseY, 0, height, 0, TWO_PI));
@@ -271,29 +274,29 @@ function setpoints() {
 
 function play_pause(force_stop) {
   if (calculate) {
-    
+
     calculate = false
-   
-  } else{
-    
+
+  } else {
+
     calculate = true
-   
+
   }
 
 }
 
-function forceStop(){
-if (pause) {
-  pause = false;
-  calculate=true;
-  
+function forceStop() {
+  if (pause) {
+    pause = false;
+    calculate = true;
+
     loop()
-} else{
-  pause = true;
-  calculate=false;
-  
+  } else {
+    pause = true;
+    calculate = false;
+
     noLoop();
-}
+  }
 }
 
 function keyPressed() {
@@ -305,6 +308,12 @@ function keyPressed() {
   }
   if (key == "r" || key == "R") {
     setup();
+  }
+  if (key == "a" || key == "A") {
+    if (show_axis) { show_axis = false } else { show_axis = true }
+  }
+  if (key == "q" || key == "Q") {
+    if (show_plane) { show_plane = false } else { show_plane = true }
   }
   if (key == "s" || key == "S") {
     saveCanvas("canvas", "jpg")
