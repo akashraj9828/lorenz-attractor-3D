@@ -69,7 +69,7 @@ function setup() {
 
 function draw() {
   
-    background(3);
+    background(51);
     // background(img);
   
   
