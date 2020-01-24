@@ -1,4 +1,7 @@
-
+function preload() {
+  roboto = loadFont('assets/Roboto-Regular.otf');
+  img=loadImage("img.jpg")
+}
 
 function setup() {
   canvas = createCanvas(windowWidth - 10, windowHeight - 10, WEBGL);
@@ -8,11 +11,12 @@ function setup() {
   pz.splice(0, pz.length)
   i = 0
 
-  // img=loadImage("./img.jpg")
 
   btn = createButton("save image")
   btn.position(100, 20)
-  btn.mousePressed(function () { saveCanvas(canvas, "My lorrenz attractor", "jpg") })
+  btn.mousePressed(function () {
+    saveCanvas(canvas, "My lorrenz attractor", "png")
+  })
 
 
   save = createButton("save value")
@@ -22,11 +26,23 @@ function setup() {
 
   axis_toggle = createButton("toggle axis")
   axis_toggle.position(100, 60)
-  axis_toggle.mousePressed(function () { if (show_axis) { show_axis = false } else { show_axis = true } })
+  axis_toggle.mousePressed(function () {
+    if (show_axis) {
+      show_axis = false
+    } else {
+      show_axis = true
+    }
+  })
 
   plane_toggle = createButton("toggle plane")
   plane_toggle.position(100, 80)
-  plane_toggle.mousePressed(function () { if (show_plane) { show_plane = false } else { show_plane = true } })
+  plane_toggle.mousePressed(function () {
+    if (show_plane) {
+      show_plane = false
+    } else {
+      show_plane = true
+    }
+  })
 
   reset = createButton("reset")
   reset.position(100, 100)
@@ -38,14 +54,20 @@ function setup() {
   stop_calc.mousePressed(play_pause)
 
 
-  stop_animation = createButton("force stop")
+  stop_animation = createButton("Stop animation")
   stop_animation.position(100, 140)
   stop_animation.mousePressed(forceStop)
 
 
+  background_color = 255;
+  bg_cl = createSlider(0, 255, 0, 1)
+  bg_cl.position(100, 160)
 
-  sclsl = createSlider(0.001, 15, 4, 0.0001)
+
+  sclsl = createSlider(.5, 15, 8, .5)
   sclsl.position(width / 2, 30)
+
+
   getValues();
   if (logging)
     log_data()
@@ -64,56 +86,65 @@ function setup() {
   initialY = y;
   initialZ = z;
   clear()
-
+  // noLoop()
 }
 
 function draw() {
-  
-    background(51);
-    // background(img);
-  
-  
-  
-    scl = sclsl.value()
-    scale(scl)
-  
-    rotation(ang, 0)
-    if (show_axis)
-      renderAxis()
-    if (show_plane)
-      renderPlane(plane_length, plane_muliplier);
-  
-  
-    setpoints()
-    followers()
-  
-  
-  
-  
-    drawLine()
-    i++
-  
-  
-  }
-  
+
+  background(bg_cl.value());
+  // background(img);
+  smooth();
 
 
-  function renderAxis() {
+  scl = sclsl.value()
+  scale(scl)
+
+  rotation(ang, 0)
+  if (show_axis)
+    renderAxis()
+  if (show_plane)
+    renderPlane(plane_length, plane_muliplier);
+
+
+  setpoints()
+  followers()
+
+
+
+
+  drawLine()
+  // fps()
+  i++
+
+
+}
+
+
+function fps() {
+  let fps = frameRate();
+  fill(0);
+  stroke(255);
+  textFont(roboto);
+  text("FPS: " + fps.toFixed(2),);
+  // console.log("---: fps -> fps.toFixed(2)", fps.toFixed(2));
+}
+
+function renderAxis() {
   colorMode(RGB)
-  fill(255, 0, 0, 100)
+  stroke(255, 0, 0, 100)
   beginShape()
   vertex(axis_length, 0, 0)
   vertex(0, 0, 0)
   endShape()
-  fill(0, 255, 0, 100)
+  stroke(0, 255, 0, 100)
   beginShape()
   vertex(0, axis_length, 0)
   vertex(0, 0, 0)
   endShape()
-  fill(0, 0, 255, 100)
+  stroke(0, 0, 255, 100)
   beginShape()
   vertex(0, 0, axis_length)
-  vertex(0, 0, 0)
+  vertex(0, 0,0)
   endShape()
 
 }
@@ -123,21 +154,24 @@ function draw() {
 function getValues() {
   if (makeRandomXYZ) {
     set_x_y_z = false;
-    x = random(0, 50);
-    y = random(0, 50);
-    z = random(0, 50);
-    dt = random(1) / 100;
+    x = random(0, 29);
+    y = random(0, 29);
+    z = random(0, 29);
+    dt = random(3) / 100;
 
 
   }
   if (randomABC) {
     debugging = true;
+    // ρ = 28, σ = 10, and β = 8/3
     sigma = random(0, 20);
     rho = random(0, 20);
     beta = random(0, 2);
-
+    // sigma=28
+    // rho=10
+    // beta=8/3
   }
-  if (set_x_y_z) {		////takes inital coordinate input(x,y,z) from user
+  if (set_x_y_z) { ////takes inital coordinate input(x,y,z) from user
     getX = prompt("Enter value for X:range(0,20)", 1);
     getY = prompt("Enter value for Y:range(0,29)", 1);
     getZ = prompt("Enter value for Z:range(0,20)", 1);
@@ -149,7 +183,7 @@ function getValues() {
 
 
   }
-  if (!debugging) {     //when not debugging takes input (sigma,rho,beta) from user
+  if (!debugging) { //when not debugging takes input (sigma,rho,beta) from user
     getSigma = prompt("Enter value for sigma:range(0,30)", 10);
     getRho = prompt("Enter value for rho:range(0,99)", 28);
     getBeta = prompt("Enter value for beta:range(0,29)", 2.6666);
@@ -178,22 +212,43 @@ function log_data() {
 function renderPlane(plane_l, plane_m) {
   colorMode(RGB)
   push()
-  translate(plane_l / 2, plane_l / 2, 0)
+  noStroke()
+  translate(0, 0, 0)
   fill(255, 0, 0, 5)
-  plane(plane_l * plane_m, plane_l * plane_m, 1, 1);
+  plane(plane_l * plane_m, plane_l * plane_m, );
   pop()
   push()
-  translate(0, plane_l / 2, plane_l / 2)
+  noStroke()
+  translate(0, 0,0)
   rotateY(-PI / 2)
   fill(0, 255, 0, 5)
-  plane(plane_l * plane_m, plane_l * plane_m, 1, 1);
+  plane(plane_l * plane_m, plane_l * plane_m, );
   pop()
   push()
-  translate(plane_l / 2, 0, plane_l / 2)
+  noStroke()
+  translate(0,0,0)
   rotateX(-PI / 2)
   fill(0, 0, 255, 5)
-  plane(plane_l * plane_m, plane_l * plane_m, 1, 1);
+  plane(plane_l * plane_m, plane_l * plane_m, );
   pop()
+  // colorMode(RGB)
+  // push()
+  // translate(plane_l / 2, plane_l / 2, 0)
+  // fill(255, 0, 0, 5)
+  // plane(plane_l * plane_m, plane_l * plane_m, );
+  // pop()
+  // push()
+  // translate(0, plane_l / 2, plane_l / 2)
+  // rotateY(-PI / 2)
+  // fill(0, 255, 0, 5)
+  // plane(plane_l * plane_m, plane_l * plane_m, );
+  // pop()
+  // push()
+  // translate(plane_l / 2, 0, plane_l / 2)
+  // rotateX(-PI / 2)
+  // fill(0, 0, 255, 5)
+  // plane(plane_l * plane_m, plane_l * plane_m, );
+  // pop()
 }
 
 
@@ -222,7 +277,9 @@ function followers() {
 }
 
 function save_values() {
-  var blob = new Blob(["x:" + initialX + '\n' + "y:" + initialY + '\n' + "z:" + initialZ + '\n' + "dt:" + dt + '\n' + "sigma:" + sigma + '\n' + "rho:" + rho + '\n' + "beta:" + beta + '\n'], { type: "text/plain;charset=utf-8" });
+  var blob = new Blob(["x:" + initialX + '\n' + "y:" + initialY + '\n' + "z:" + initialZ + '\n' + "dt:" + dt + '\n' + "sigma:" + sigma + '\n' + "rho:" + rho + '\n' + "beta:" + beta + '\n'], {
+    type: "text/plain;charset=utf-8"
+  });
   saveAs(blob, "saved.txt");
 }
 
@@ -231,14 +288,14 @@ function drawLine() {
 
 
   colorMode(HSB)
-  fill(i / 2 % 255, 100, 50, 100)
-
+  stroke(i / 2 % 255, 100, 50, 100)
+  strokeWeight(2);
+  noFill()
+ 
   beginShape();
 
   for (j = 0; j < i; j += 10) {
-
-    vertex(px[j], py[j], pz[j]);		//set vertices
-
+    vertex(px[j], py[j], pz[j]); //set vertices
     vertex(px[j + 1], py[j + 1], pz[j + 1]);
     vertex(px[j + 2], py[j + 2], pz[j + 2]);
     vertex(px[j + 3], py[j + 3], pz[j + 3]);
@@ -253,6 +310,7 @@ function drawLine() {
 
   }
   endShape();
+
 }
 
 function setpoints() {
@@ -310,16 +368,20 @@ function keyPressed() {
     setup();
   }
   if (key == "a" || key == "A") {
-    if (show_axis) { show_axis = false } else { show_axis = true }
+    if (show_axis) {
+      show_axis = false
+    } else {
+      show_axis = true
+    }
   }
   if (key == "q" || key == "Q") {
-    if (show_plane) { show_plane = false } else { show_plane = true }
+    if (show_plane) {
+      show_plane = false
+    } else {
+      show_plane = true
+    }
   }
   if (key == "s" || key == "S") {
-    saveCanvas("canvas", "jpg")
+    saveCanvas("My lorrenz attractor", "png")
   }
 }
-
-
-
-

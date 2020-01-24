@@ -20,7 +20,7 @@ var getZ
 var rad = 2
 var sclsl
 var canvas
-var axis_length = 100
+var axis_length = 1000
 var plane_length=axis_length
 var plane_muliplier=1
 
@@ -48,4 +48,6 @@ var stop_animation
 var initialX;
 var initialY;
 var initialZ;
+
+var background_color;
 
