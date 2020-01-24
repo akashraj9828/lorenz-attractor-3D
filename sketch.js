@@ -1,9 +1,10 @@
 function preload() {
   roboto = loadFont('assets/Roboto-Regular.otf');
-  img=loadImage("img.jpg")
+  img = loadImage("img.jpg")
 }
 
 function setup() {
+  // if(!canvas)
   canvas = createCanvas(windowWidth - 10, windowHeight - 10, WEBGL);
   clr = random(0, 255)
   px.splice(0, px.length)
@@ -12,19 +13,19 @@ function setup() {
   i = 0
 
 
-  btn = createButton("save image")
+  btn = createButton("Save image / S")
   btn.position(100, 20)
   btn.mousePressed(function () {
     saveCanvas(canvas, "My lorrenz attractor", "png")
   })
 
 
-  save = createButton("save value")
+  save = createButton("Save values")
   save.position(100, 40)
   save.mousePressed(save_values)
 
 
-  axis_toggle = createButton("toggle axis")
+  axis_toggle = createButton("Toggle axis / A")
   axis_toggle.position(100, 60)
   axis_toggle.mousePressed(function () {
     if (show_axis) {
@@ -34,7 +35,7 @@ function setup() {
     }
   })
 
-  plane_toggle = createButton("toggle plane")
+  plane_toggle = createButton("Toggle plane / Q")
   plane_toggle.position(100, 80)
   plane_toggle.mousePressed(function () {
     if (show_plane) {
@@ -44,31 +45,37 @@ function setup() {
     }
   })
 
-  reset = createButton("reset")
-  reset.position(100, 100)
-  reset.mousePressed(setup)
+  resetbtn = createButton("Reset")
+  resetbtn.position(100, 100)
+  resetbtn.mousePressed(reset)
 
 
-  stop_calc = createButton("pause calculation")
+  stop_calc = createButton("Pause calculation / P")
   stop_calc.position(100, 120)
   stop_calc.mousePressed(play_pause)
 
 
-  stop_animation = createButton("Stop animation")
+  stop_animation = createButton("Stop animation / F")
   stop_animation.position(100, 140)
   stop_animation.mousePressed(forceStop)
 
 
+
+  stop_animation = createButton("Load spinning top")
+  stop_animation.position(100, 160)
+  stop_animation.mousePressed(spinning_top)
+
+
   background_color = 255;
   bg_cl = createSlider(0, 255, 0, 1)
-  bg_cl.position(100, 160)
+  bg_cl.position(100, 180)
 
 
   sclsl = createSlider(.5, 15, 8, .5)
   sclsl.position(width / 2, 30)
 
 
-  getValues();
+  getValues(israndom = true);
   if (logging)
     log_data()
 
@@ -86,8 +93,25 @@ function setup() {
   initialY = y;
   initialZ = z;
   clear()
-  // noLoop()
+  if(initial_stopped)
+  noLoop()
 }
+
+function spinning_top() {
+  x = 32.15143341866782
+  y = 18.890525402529313
+  z = 17.724070644253377
+  dt = 0.0030594866921294208
+  sigma = 0.0989796833330780
+  rho = 16.62075729215588
+  beta = 1.6851818470360898
+  px = []
+  py = []
+  pz = []
+  i = 0
+  reset(israndom = false);
+}
+
 
 function draw() {
 
@@ -125,7 +149,7 @@ function fps() {
   fill(0);
   stroke(255);
   textFont(roboto);
-  text("FPS: " + fps.toFixed(2),);
+  text("FPS: " + fps.toFixed(2), );
   // console.log("---: fps -> fps.toFixed(2)", fps.toFixed(2));
 }
 
@@ -144,53 +168,62 @@ function renderAxis() {
   stroke(0, 0, 255, 100)
   beginShape()
   vertex(0, 0, axis_length)
-  vertex(0, 0,0)
+  vertex(0, 0, 0)
   endShape()
 
 }
 
 
 
-function getValues() {
-  if (makeRandomXYZ) {
-    set_x_y_z = false;
-    x = random(0, 29);
-    y = random(0, 29);
-    z = random(0, 29);
-    dt = random(3) / 100;
+function getValues(israndom) {
+  if (!israndom) {
+    if (makeRandomXYZ) {
+      set_x_y_z = false;
+      // x = random(0, 29);
+      // y = random(0, 29);
+      // z = random(0, 29);
+      // dt = random(3) / 100;
+      x = random(0, 50);
+      y = random(0, 50);
+      z = random(0, 50);
+      dt = random(1) / 100;
 
 
-  }
-  if (randomABC) {
-    debugging = true;
-    // ρ = 28, σ = 10, and β = 8/3
-    sigma = random(0, 20);
-    rho = random(0, 20);
-    beta = random(0, 2);
-    // sigma=28
-    // rho=10
-    // beta=8/3
-  }
-  if (set_x_y_z) { ////takes inital coordinate input(x,y,z) from user
-    getX = prompt("Enter value for X:range(0,20)", 1);
-    getY = prompt("Enter value for Y:range(0,29)", 1);
-    getZ = prompt("Enter value for Z:range(0,20)", 1);
-    get_dT = prompt("Enter value for dT:range(0.01,0.2)", 0.01);
-    x = parseFloat(getX);
-    y = parseFloat(getY);
-    z = parseFloat(getZ);
-    dt = parseFloat(get_dT);
+    }
+    if (randomABC) {
+      debugging = true;
+      // ρ = 28, σ = 10, and β = 8/3
+      // sigma = random(0, 20);
+      // rho = random(0, 20);
+      // beta = random(0, 2);
+      sigma = 25.9; //17.4  //default=10   //sigma	
+      rho = 41; //47.9   //default=28	//rho	
+      beta = 7.8; //5.6 //default=8/3		//beta
+      // sigma=28
+      // rho=10
+      // beta=8/3
+    }
+    if (set_x_y_z) { ////takes inital coordinate input(x,y,z) from user
+      getX = prompt("Enter value for X:range(0,20)", 1);
+      getY = prompt("Enter value for Y:range(0,29)", 1);
+      getZ = prompt("Enter value for Z:range(0,20)", 1);
+      get_dT = prompt("Enter value for dT:range(0.01,0.2)", 0.01);
+      x = parseFloat(getX);
+      y = parseFloat(getY);
+      z = parseFloat(getZ);
+      dt = parseFloat(get_dT);
 
 
-  }
-  if (!debugging) { //when not debugging takes input (sigma,rho,beta) from user
-    getSigma = prompt("Enter value for sigma:range(0,30)", 10);
-    getRho = prompt("Enter value for rho:range(0,99)", 28);
-    getBeta = prompt("Enter value for beta:range(0,29)", 2.6666);
-    sigma = parseFloat(getSigma);
-    rho = parseFloat(getRho);
-    beta = parseFloat(getBeta);
+    }
+    if (!debugging) { //when not debugging takes input (sigma,rho,beta) from user
+      getSigma = prompt("Enter value for sigma:range(0,30)", 10);
+      getRho = prompt("Enter value for rho:range(0,99)", 28);
+      getBeta = prompt("Enter value for beta:range(0,29)", 2.6666);
+      sigma = parseFloat(getSigma);
+      rho = parseFloat(getRho);
+      beta = parseFloat(getBeta);
 
+    }
   }
 }
 
@@ -219,14 +252,14 @@ function renderPlane(plane_l, plane_m) {
   pop()
   push()
   noStroke()
-  translate(0, 0,0)
+  translate(0, 0, 0)
   rotateY(-PI / 2)
   fill(0, 255, 0, 5)
   plane(plane_l * plane_m, plane_l * plane_m, );
   pop()
   push()
   noStroke()
-  translate(0,0,0)
+  translate(0, 0, 0)
   rotateX(-PI / 2)
   fill(0, 0, 255, 5)
   plane(plane_l * plane_m, plane_l * plane_m, );
@@ -291,7 +324,7 @@ function drawLine() {
   stroke(i / 2 % 255, 100, 50, 100)
   strokeWeight(2);
   noFill()
- 
+
   beginShape();
 
   for (j = 0; j < i; j += 10) {
@@ -309,6 +342,7 @@ function drawLine() {
     vertex(px[j + 11], py[j + 11], pz[j + 11]);
 
   }
+  endShape(OPEN);
   endShape();
 
 }
@@ -365,7 +399,7 @@ function keyPressed() {
     forceStop()
   }
   if (key == "r" || key == "R") {
-    setup();
+    reset();
   }
   if (key == "a" || key == "A") {
     if (show_axis) {
@@ -384,4 +418,23 @@ function keyPressed() {
   if (key == "s" || key == "S") {
     saveCanvas("My lorrenz attractor", "png")
   }
+}
+
+function reset(israndom) {
+  px = []
+  py = []
+  pz = []
+  i = 0
+  if (!israndom) {
+    getValues(israndom);
+  }
+  if (logging)
+    log_data()
+
+  initialX = x;
+  initialY = y;
+  initialZ = z;
+  clear()
+  if(initial_stopped)
+  noLoop()
 }

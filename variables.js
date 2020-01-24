@@ -26,7 +26,7 @@ var plane_muliplier=1
 
 var pause = false;
 var calculate = true;
-
+var initial_stopped=false
 
 var debugging = true;       //set true when testing
 var logging=true;		
